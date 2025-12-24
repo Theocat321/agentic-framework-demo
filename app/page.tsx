@@ -106,12 +106,12 @@ function LangGraphDiagram({ progress }: { progress: ReturnType<typeof useSection
       </>
     }>
       {/* Edges */}
-      <Edge points={[A, Bn]} active={activeAB} draw={drawAB} label="Input → Planner" />
-      <Edge points={[Bn, Cn]} active={activeBC} draw={drawBC} label="Planner → Tools" />
-      <Edge points={[Cn, Dn]} active={activeCD} draw={drawCD} label="Tools → Verifier" />
-      <Edge points={[Dn, Cn]} active={activeDC} draw={drawDC} label="Verifier → Tools" />
-      <Edge points={[Cn, Dn]} active={activeCD2} draw={drawCD2} label="Tools → Verifier" />
-      <Edge points={[Dn, E]} active={activeDE} draw={drawDE} label="Verifier → Output" />
+      <Edge points={[A, Bn]} startTrim={6} endTrim={6} active={activeAB} draw={drawAB} label="Input → Planner" />
+      <Edge points={[Bn, Cn]} startTrim={6} endTrim={6} active={activeBC} draw={drawBC} label="Planner → Tools" />
+      <Edge points={[Cn, Dn]} startTrim={6} endTrim={6} active={activeCD} draw={drawCD} label="Tools → Verifier" />
+      <Edge points={[Dn, Cn]} startTrim={6} endTrim={6} active={activeDC} draw={drawDC} label="Verifier → Tools" />
+      <Edge points={[Cn, Dn]} startTrim={6} endTrim={6} active={activeCD2} draw={drawCD2} label="Tools → Verifier" />
+      <Edge points={[Dn, E]} startTrim={6} endTrim={6} active={activeDE} draw={drawDE} label="Verifier → Output" />
 
       {/* Nodes */}
       <Node x={A[0]} y={A[1]} label="Input" intensity={nA} />
@@ -121,7 +121,7 @@ function LangGraphDiagram({ progress }: { progress: ReturnType<typeof useSection
       <Node x={E[0]} y={E[1]} label="Output" intensity={nE} />
 
       {/* Animated arrow along path */}
-      <ArrowToken path={loopPath} progress={t} ariaLabel="Flow arrow" />
+      <ArrowToken path={loopPath} startTrim={6} endTrim={6} progress={t} ariaLabel="Flow arrow" />
 
       {/* Completion badge */}
       <motion.div className="absolute" style={{ left: `${E[0]}%`, top: `${E[1] - 12}%`, transform: 'translate(-50%, 0)' }}>
@@ -167,14 +167,14 @@ function CrewAIDiagram({ progress }: { progress: ReturnType<typeof useSectionPro
         <span className="badge">C. Delivered</span>
       </>
     }>
-      <Edge points={[R, A]} active={activeRA} draw={drawRA} label="Researcher → Analyst" />
-      <Edge points={[A, W]} active={activeAW} draw={drawAW} label="Analyst → Writer" />
-      <Edge points={[W, Re]} active={activeWR} draw={drawWR} label="Writer → Reviewer" />
+      <Edge points={[R, A]} startTrim={6} endTrim={6} active={activeRA} draw={drawRA} label="Researcher → Analyst" />
+      <Edge points={[A, W]} startTrim={6} endTrim={6} active={activeAW} draw={drawAW} label="Analyst → Writer" />
+      <Edge points={[W, Re]} startTrim={6} endTrim={6} active={activeWR} draw={drawWR} label="Writer → Reviewer" />
       <Node x={R[0]} y={R[1]} label="Researcher" />
       <Node x={A[0]} y={A[1]} label="Analyst" />
       <Node x={W[0]} y={W[1]} label="Writer" />
       <Node x={Re[0]} y={Re[1]} label="Reviewer" />
-      <ArrowToken path={taskPath} progress={t} ariaLabel="Task flow arrow" />
+      <ArrowToken path={taskPath} startTrim={6} endTrim={6} progress={t} ariaLabel="Task flow arrow" />
       <motion.div className="absolute" style={{ left: `${Re[0]}%`, top: `${Re[1] - 12}%`, transform: 'translate(-50%, 0)' }}>
         <motion.div style={{ opacity: pC, scale: useTransform(pC, t => 0.9 + t * 0.15), rotate: useTransform(pC, t => (1 - t) * -8) }}>
           <Badge label="Delivered" tone="success" />
@@ -229,12 +229,12 @@ function AutoGenDiagram({ progress }: { progress: ReturnType<typeof useSectionPr
       <Node x={28} y={77} w={26} h={10} label="Revised message" intensity={m3} />
 
       {/* Arrows */}
-      <Edge points={[Acol, Bcol]} active={m1} draw={drawA2B} label="A → B" />
-      <Edge points={[Bcol, Judge]} active={m2} draw={drawB2J} label="B → Critic" />
-      <Edge points={[Judge, Acol]} active={activeJ2A} draw={drawJ2A} label="Critic → A" />
+      <Edge points={[Acol, Bcol]} startTrim={6} endTrim={6} active={m1} draw={drawA2B} label="A → B" />
+      <Edge points={[Bcol, Judge]} startTrim={6} endTrim={6} active={m2} draw={drawB2J} label="B → Critic" />
+      <Edge points={[Judge, Acol]} startTrim={6} endTrim={6} active={activeJ2A} draw={drawJ2A} label="Critic → A" />
 
       {/* Token as message flow */}
-      <ArrowToken path={path1} progress={t} ariaLabel="Conversation flow" />
+      <ArrowToken path={path1} startTrim={6} endTrim={6} progress={t} ariaLabel="Conversation flow" />
 
       <motion.div className="absolute" style={{ left: '50%', top: '88%', transform: 'translate(-50%, 0)' }}>
         <motion.div style={{ opacity: pC }}>
@@ -258,21 +258,36 @@ function SwarmDiagram({ progress }: { progress: ReturnType<typeof useSectionProg
   const drawT = (a: number, b: number) => useTransform(t, v => Math.max(0, Math.min(1, (v - a) / (b - a))));
   const pC = presenceT(0.85, 1);
   const Router: [number, number] = [50, 20];
-  const S1: [number, number] = [26, 60];
-  const S2: [number, number] = [44, 60];
-  const S3: [number, number] = [56, 60];
-  const S4: [number, number] = [74, 60];
+  const S1: [number, number] = [24, 64];
+  const S2: [number, number] = [40, 64];
+  const S3: [number, number] = [60, 64];
+  const S4: [number, number] = [76, 64];
 
-  const path: Array<[number, number]> = [Router, S2, S3, Router];
-  const e1 = presenceT(0, 0.34);
-  const e2 = presenceT(0.34, 0.67);
-  const e3 = presenceT(0.67, 1);
-  const drawE1 = drawT(0, 0.34);
-  const drawE2 = drawT(0.34, 0.67);
-  const drawE3 = drawT(0.67, 1);
-  const tMove = drawT(0.34, 0.67);
-  const ownerLeft = useTransform(tMove, t => `${S2[0] + (S3[0] - S2[0]) * t}%`);
-  const ownerTop = useTransform(tMove, t => `${S2[1] + (S3[1] - S2[1]) * t - 12}%`);
+  const path: Array<[number, number]> = [Router, [46, 40], S2, [50, 64], S3, [54, 40], Router];
+  const e1 = presenceT(0.0, 0.33);
+  const e2 = presenceT(0.33, 0.66);
+  const e3 = presenceT(0.66, 1.0);
+  const drawE1 = drawT(0.0, 0.33);
+  const drawE2 = drawT(0.33, 0.66);
+  const drawE3 = drawT(0.66, 1.0);
+  const ownerLeft = useTransform(t, v => {
+    if (v < 0.33) {
+      const lt = v / 0.33; return `${Router[0] + (S2[0] - Router[0]) * lt}%`;
+    } else if (v < 0.66) {
+      const lt = (v - 0.33) / 0.33; return `${S2[0] + (S3[0] - S2[0]) * lt}%`;
+    } else {
+      const lt = (v - 0.66) / 0.34; return `${S3[0] + (Router[0] - S3[0]) * lt}%`;
+    }
+  });
+  const ownerTop = useTransform(t, v => {
+    if (v < 0.33) {
+      const lt = v / 0.33; return `${Router[1] + (S2[1] - Router[1]) * lt - 12}%`;
+    } else if (v < 0.66) {
+      const lt = (v - 0.33) / 0.33; return `${S2[1] + (S3[1] - S2[1]) * lt - 12}%`;
+    } else {
+      const lt = (v - 0.66) / 0.34; return `${S3[1] + (Router[1] - S3[1]) * lt - 12}%`;
+    }
+  });
 
   return (
     <DiagramCanvas title="OpenAI Swarm" legend={
@@ -282,23 +297,29 @@ function SwarmDiagram({ progress }: { progress: ReturnType<typeof useSectionProg
         <span className="badge">C. Resolved</span>
       </>
     }>
-      <Edge points={[Router, S2]} active={e1} draw={drawE1} label="Route to specialist" />
-      <Edge points={[S2, S3]} active={e2} draw={drawE2} label="Handoff" />
-      <Edge points={[S3, Router]} active={e3} draw={drawE3} label="Resolved" />
+      {/* Incoming task to Router */}
+      <Edge points={[[20, 8], [Router[0], Router[1]]]} startTrim={0} endTrim={8} active={presenceT(0.0, 0.1)} draw={drawT(0.0, 0.1)} dashed thickness={1.6} label="Incoming" />
+      {/* Routed edges with subtle bends; trim at node boundaries */}
+      <Edge points={[Router, [46, 40], S2]} startTrim={8} endTrim={8} active={e1} draw={drawE1} thickness={2.4} label="Route to specialist" />
+      <Edge points={[S2, [50, 64], S3]} startTrim={8} endTrim={8} active={e2} draw={drawE2} thickness={2.4} label="Handoff" />
+      <Edge points={[S3, [54, 40], Router]} startTrim={8} endTrim={8} active={e3} draw={drawE3} thickness={2.4} label="Resolved" />
 
-      <Node x={Router[0]} y={Router[1]} label="Router" />
-      <Node x={S1[0]} y={S1[1]} label="Spec A" />
-      <Node x={S2[0]} y={S2[1]} label="Spec B" />
-      <Node x={S3[0]} y={S3[1]} label="Spec C" />
-      <Node x={S4[0]} y={S4[1]} label="Spec D" />
+      <Node x={Router[0]} y={Router[1]} w={16} h={12} label="Router" intensity={e3} />
+      <Node x={S1[0]} y={S1[1]} w={14} h={12} label="Spec A" />
+      <Node x={S2[0]} y={S2[1]} w={14} h={12} label="Spec B" intensity={e1} />
+      <Node x={S3[0]} y={S3[1]} w={14} h={12} label="Spec C" intensity={e2} />
+      <Node x={S4[0]} y={S4[1]} w={14} h={12} label="Spec D" />
 
-      <ArrowToken path={path} progress={t} ariaLabel="Routing flow" />
+      {/* Arrow token path trimmed to avoid over-extending into nodes */}
+      <ArrowToken path={[Router, [46, 40], [S2[0] - 2, S2[1]], [50, 64], [S3[0] + 2, S3[1]], [54, 40], [Router[0], Router[1] + 2]]} progress={t} ariaLabel="Routing flow" />
 
       {/* Ownership badge follows S2 → S3 */}
       <motion.div className="absolute" style={{ left: ownerLeft, top: ownerTop, transform: 'translate(-50%, 0)' }}>
         <Badge label="Owner" tone="muted" />
       </motion.div>
 
+      {/* Emitted resolution upward */}
+      <Edge points={[[Router[0], Router[1]], [Router[0], 6]]} active={pC} draw={drawT(0.85, 1)} dashed thickness={1.6} label="Emit" />
       <motion.div className="absolute" style={{ left: `${Router[0]}%`, top: `${Router[1] - 12}%`, transform: 'translate(-50%, 0)' }}>
         <motion.div style={{ opacity: pC }}>
           <Badge label="Resolved" tone="success" />
@@ -324,6 +345,7 @@ function ReActDiagram({ progress }: { progress: ReturnType<typeof useSectionProg
   const Action: [number, number] = [50, 50];
   const Observation: [number, number] = [76, 50];
   const Tools: [number, number] = [50, 72];
+  // Direct center-to-center path to avoid offset issues
   const loop: Array<[number, number]> = [Thought, Action, Observation, Thought];
 
   const toAction = presenceT(0, 0.34);
@@ -334,6 +356,13 @@ function ReActDiagram({ progress }: { progress: ReturnType<typeof useSectionProg
   const draw2 = drawT(0.34, 0.67);
   const draw3 = drawT(0.67, 1);
   const drawTool = drawT(0.2, 0.5);
+  // Node intensities
+  const thoughtIntensity = useTransform([toAction, toThought], ([a, c]: any[]) => Math.max(a, c));
+  const actionIntensity = useTransform([toAction, toolPulse], ([a, p]: any[]) => Math.max(a, p));
+  const obsIntensity = useTransform([toObs, toThought], ([b, c]: any[]) => Math.max(b, c));
+  // Thought ripple
+  const rippleR = useTransform(thoughtIntensity, v => 3 + v * 6);
+  const rippleOpacity = useTransform(thoughtIntensity, [0, 1], [0, 0.5]);
 
   return (
     <DiagramCanvas title="ReAct" legend={
@@ -343,17 +372,22 @@ function ReActDiagram({ progress }: { progress: ReturnType<typeof useSectionProg
         <span className="badge">C. Answer</span>
       </>
     }>
-      <Edge points={[Thought, Action]} active={toAction} draw={draw1} label="Thought → Action" />
-      <Edge points={[Action, Observation]} active={toObs} draw={draw2} label="Action → Observation" />
-      <Edge points={[Observation, Thought]} active={toThought} draw={draw3} label="Observation → Thought" />
-      <Edge points={[Action, Tools]} active={toolPulse} dashed draw={drawTool} label="Tool call" />
+      <Edge points={[Thought, Action]} startTrim={6} endTrim={6} active={toAction} draw={draw1} thickness={2.4} label="Thought → Action" />
+      <Edge points={[Action, Observation]} startTrim={6} endTrim={6} active={toObs} draw={draw2} thickness={2.4} label="Action → Observation" />
+      <Edge points={[Observation, Thought]} startTrim={6} endTrim={6} active={toThought} draw={draw3} thickness={2.4} label="Observation → Thought" />
+      <Edge points={[Action, Tools]} active={toolPulse} dashed draw={drawTool} thickness={2.2} label="Tool call" />
 
-      <Node x={Thought[0]} y={Thought[1]} label="Thought" />
-      <Node x={Action[0]} y={Action[1]} label="Action" />
-      <Node x={Observation[0]} y={Observation[1]} label="Observation" />
+      <Node x={Thought[0]} y={Thought[1]} label="Thought" intensity={thoughtIntensity} />
+      <Node x={Action[0]} y={Action[1]} label="Action" intensity={actionIntensity} />
+      <Node x={Observation[0]} y={Observation[1]} label="Observation" intensity={obsIntensity} />
       <Node x={Tools[0]} y={Tools[1]} label="Tool" intensity={toolPulse} />
 
-      <ArrowToken path={loop} progress={t} ariaLabel="ReAct loop arrow" />
+      {/* Thought ripple */}
+      <motion.svg className="absolute inset-0" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+        <motion.circle cx={Thought[0]} cy={Thought[1]} r={rippleR as any} fill="none" stroke="rgba(96,165,250,0.5)" strokeWidth="0.8" style={{ opacity: rippleOpacity as any }} />
+      </motion.svg>
+
+      <ArrowToken path={loop} startTrim={6} endTrim={6} progress={t} ariaLabel="ReAct loop arrow" />
 
       <motion.div className="absolute" style={{ left: `${Observation[0]}%`, top: `${Observation[1] + 14}%`, transform: 'translate(-50%, 0)' }}>
         <motion.div style={{ opacity: pC, scale: useTransform(pC, t => 0.9 + t * 0.12) }}>
@@ -396,15 +430,15 @@ function MemGPTDiagram({ progress }: { progress: ReturnType<typeof useSectionPro
         <span className="badge">C. Loaded</span>
       </>
     }>
-      <Edge points={[STM, Pager]} active={toSTM} dashed draw={draw1} label="STM → Pager" />
-      <Edge points={[Pager, LTM]} active={toLTM} dashed draw={draw2} label="Pager → LTM" />
-      <Edge points={[LTM, STM]} active={backSTM} dashed draw={draw3} label="Recall" />
+      <Edge points={[STM, Pager]} startTrim={6} endTrim={6} active={toSTM} dashed draw={draw1} label="STM → Pager" />
+      <Edge points={[Pager, LTM]} startTrim={6} endTrim={6} active={toLTM} dashed draw={draw2} label="Pager → LTM" />
+      <Edge points={[LTM, STM]} startTrim={6} endTrim={6} active={backSTM} dashed draw={draw3} label="Recall" />
 
       <Node x={STM[0]} y={STM[1]} w={24} label="Short-term" />
       <Node x={Pager[0]} y={Pager[1]} pill w={20} h={10} label="Pager" />
       <Node x={LTM[0]} y={LTM[1]} w={24} label="Long-term" />
 
-      <ArrowToken path={path} progress={t} ariaLabel="Paging arrow" />
+      <ArrowToken path={path} startTrim={6} endTrim={6} progress={t} ariaLabel="Paging arrow" />
 
       <motion.div className="absolute" style={{ left: `${STM[0]}%`, top: `${STM[1] + 14}%`, transform: 'translate(-50%, 0)' }}>
         <motion.div style={{ opacity: pC, scale: useTransform(pC, t => 0.9 + t * 0.12) }}>
@@ -415,107 +449,7 @@ function MemGPTDiagram({ progress }: { progress: ReturnType<typeof useSectionPro
   );
 }
 
-function PatternLibrary() {
-  const items = [
-    { title: 'Planner → Executor → Critic', diagram: (
-      <div className="relative h-28">
-        <svg className="absolute inset-0" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <defs>
-            <marker id="arr1" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.6)" />
-            </marker>
-          </defs>
-          <path d="M14,50 L40,50" stroke="rgba(148,163,184,0.7)" strokeWidth="2" markerEnd="url(#arr1)" />
-          <path d="M60,50 L86,50" stroke="rgba(148,163,184,0.7)" strokeWidth="2" markerEnd="url(#arr1)" />
-        </svg>
-        <div className="absolute left-[20%] top-1/2 -translate-y-1/2 w-[22%]"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Planner</div></div>
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[22%] hover:scale-[1.03] transition"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Executor</div></div>
-        <div className="absolute left-[78%] top-1/2 -translate-x-full -translate-y-1/2 w-[22%]"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Critic</div></div>
-      </div>
-    )},
-    { title: 'Router → Specialists', diagram: (
-      <div className="relative h-28">
-        <svg className="absolute inset-0" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <defs>
-            <marker id="arr2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.6)" />
-            </marker>
-          </defs>
-          <path d="M50,24 L24,76" stroke="rgba(148,163,184,0.7)" strokeWidth="2" markerEnd="url(#arr2)" />
-          <path d="M50,24 L50,76" stroke="rgba(148,163,184,0.7)" strokeWidth="2" markerEnd="url(#arr2)" />
-          <path d="M50,24 L76,76" stroke="rgba(148,163,184,0.7)" strokeWidth="2" markerEnd="url(#arr2)" />
-        </svg>
-        <div className="absolute left-1/2 top-[20%] -translate-x-1/2 -translate-y-1/2 w-[22%]"><div className="rounded-full border border-white/10 bg-white/5 p-2 text-center text-xs">Router</div></div>
-        <div className="absolute left-[24%] top-[76%] -translate-x-1/2 -translate-y-1/2 w-[20%] hover:translate-y-[-2px] transition"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Spec A</div></div>
-        <div className="absolute left-1/2 top-[76%] -translate-x-1/2 -translate-y-1/2 w-[20%]"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Spec B</div></div>
-        <div className="absolute left-[76%] top-[76%] -translate-x-1/2 -translate-y-1/2 w-[20%]"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Spec C</div></div>
-      </div>
-    )},
-    { title: 'Tool-Using agent with Guardrails', diagram: (
-      <div className="relative h-28">
-        <svg className="absolute inset-0" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <defs>
-            <marker id="arr3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.6)" />
-            </marker>
-          </defs>
-          <path d="M30,50 L70,50" stroke="rgba(148,163,184,0.7)" strokeWidth="2" markerEnd="url(#arr3)" />
-          <rect x="18" y="24" width="10" height="52" rx="4" fill="rgba(255,255,255,0.06)" />
-          <rect x="72" y="24" width="10" height="52" rx="4" fill="rgba(255,255,255,0.06)" />
-        </svg>
-        <div className="absolute left-[30%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[22%]"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Agent</div></div>
-        <div className="absolute left-[70%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[22%] hover:scale-[1.02] transition"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Tool</div></div>
-      </div>
-    )},
-    { title: 'Human-in-the-Loop', diagram: (
-      <div className="relative h-28">
-        <svg className="absolute inset-0" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <defs>
-            <marker id="arr4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.6)" />
-            </marker>
-          </defs>
-          <path d="M26,50 L50,30 L74,50 L50,70 Z" fill="none" stroke="rgba(148,163,184,0.7)" strokeWidth="2" />
-        </svg>
-        <div className="absolute left-[26%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[22%]"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Agent</div></div>
-        <div className="absolute left-1/2 top-[30%] -translate-x-1/2 -translate-y-1/2 w-[22%] hover:translate-y-[1px] transition"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Human</div></div>
-        <div className="absolute left-[74%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[22%]"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Tool</div></div>
-      </div>
-    )},
-    { title: 'Evaluator/Judge', diagram: (
-      <div className="relative h-28">
-        <svg className="absolute inset-0" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <defs>
-            <marker id="arr5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.6)" />
-            </marker>
-          </defs>
-          <path d="M20,50 L50,50 L80,50" stroke="rgba(148,163,184,0.7)" strokeWidth="2" markerEnd="url(#arr5)" />
-        </svg>
-        <div className="absolute left-[20%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[22%]"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Outputs</div></div>
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[22%] hover:scale-[1.03] transition"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Judge</div></div>
-        <div className="absolute left-[80%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[22%]"><div className="rounded-xl border border-white/10 bg-white/5 p-2 text-center text-xs">Score</div></div>
-      </div>
-    )},
-  ];
-
-  return (
-    <section id="patterns" className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
-      <h2 className="text-3xl font-semibold tracking-tight">Pattern Library</h2>
-      <p className="mt-2 text-sm text-white/70">Mini diagrams with common orchestration motifs</p>
-      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((it, idx) => (
-          <div key={idx} className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-soft hover:bg-white/10 transition">
-            <p className="text-sm text-white/80">{it.title}</p>
-            <div className="mt-3 rounded-xl bg-[color:var(--panel)] grid-bg relative overflow-hidden soft-border">
-              {it.diagram}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+// Pattern Library removed
 
 export default function Page() {
   const langRef = useRef<HTMLElement>(null);
@@ -539,15 +473,15 @@ export default function Page() {
       <SectionShell
         ref={langRef as any}
         id="langgraph"
-          title="LangGraph: Graph/state machine execution"
-          subtitle="Define nodes and edges; manage control flow, conditional branches, and retries across tool and reasoning steps."
-          bullets={[
-            'Deterministic node transitions',
-            'State updates at each step',
-            'Conditional verification loop',
-            'Great for reliable pipelines',
-          ]}
-          callout="Structured multi-step workflows with verifications and fallbacks."
+        title="LangGraph: Graph/state machine execution"
+        subtitle="Define nodes and edges; manage control flow, conditional branches, and retries across tool and reasoning steps."
+        bullets={[
+          'Deterministic node transitions',
+          'State updates at each step',
+          'Conditional verification loop',
+          'Great for reliable pipelines',
+        ]}
+        callout="Structured multi-step workflows with verifications and fallbacks."
       >
         <LangGraphDiagram progress={langProg} />
       </SectionShell>
@@ -555,15 +489,15 @@ export default function Page() {
       <SectionShell
         ref={crewRef as any}
         id="crewai"
-          title="CrewAI: Role-based team + handoffs"
-          subtitle="Coordinate a crew of specialized agents with well-defined responsibilities and clear handoff policies."
-          bullets={[
-            'Explicit roles & goals',
-            'Sequential & parallel work',
-            'Progress visibility',
-            'Review before delivery',
-          ]}
-          callout="Complex tasks spanning research, analysis, writing, and review."
+        title="CrewAI: Role-based team + handoffs"
+        subtitle="Coordinate a crew of specialized agents with well-defined responsibilities and clear handoff policies."
+        bullets={[
+          'Explicit roles & goals',
+          'Sequential & parallel work',
+          'Progress visibility',
+          'Review before delivery',
+        ]}
+        callout="Complex tasks spanning research, analysis, writing, and review."
       >
         <CrewAIDiagram progress={crewProg} />
       </SectionShell>
@@ -571,15 +505,15 @@ export default function Page() {
       <SectionShell
         ref={autoRef as any}
         id="autogen"
-          title="AutoGen: Multi-agent conversation + critique"
-          subtitle="Two agents converse, a critic evaluates, and revisions lead to consensus."
-          bullets={[
-            'Conversational planning',
-            'Critique loops',
-            'Revision prompts',
-            'Consensus convergence',
-          ]}
-          callout="Designing collaborative problem solving with iterative feedback."
+        title="AutoGen: Multi-agent conversation + critique"
+        subtitle="Two agents converse, a critic evaluates, and revisions lead to consensus."
+        bullets={[
+          'Conversational planning',
+          'Critique loops',
+          'Revision prompts',
+          'Consensus convergence',
+        ]}
+        callout="Designing collaborative problem solving with iterative feedback."
       >
         <AutoGenDiagram progress={autoProg} />
       </SectionShell>
@@ -587,15 +521,15 @@ export default function Page() {
       <SectionShell
         ref={swarmRef as any}
         id="swarm"
-          title="OpenAI Swarm: Router + ownership handoffs"
-          subtitle="A central router dispatches tasks to specialists; ownership transfers as needed until resolved."
-          bullets={[
-            'Routing policies',
-            'Specialist selection',
-            'Ownership tracking',
-            'Resolution events',
-          ]}
-          callout="Routing complex requests to the right experts, then coordinating results."
+        title="OpenAI Swarm: Router + ownership handoffs"
+        subtitle="A central router dispatches tasks to specialists; ownership transfers as needed until resolved."
+        bullets={[
+          'Routing policies',
+          'Specialist selection',
+          'Ownership tracking',
+          'Resolution events',
+        ]}
+        callout="Routing complex requests to the right experts, then coordinating results."
       >
         <SwarmDiagram progress={swarmProg} />
       </SectionShell>
@@ -603,15 +537,15 @@ export default function Page() {
       <SectionShell
         ref={reactRef as any}
         id="react"
-          title="ReAct: Think/Act/Observe loop"
-          subtitle="Alternate between reasoning, acting on tools, and observing results to refine thoughts."
-          bullets={[
-            'Explicit reasoning steps',
-            'Tool invocation',
-            'Observation integration',
-            'One full loop to completion',
-          ]}
-          callout="Tool-augmented reasoning that remains interpretable."
+        title="ReAct: Think/Act/Observe loop"
+        subtitle="Alternate between reasoning, acting on tools, and observing results to refine thoughts."
+        bullets={[
+          'Explicit reasoning steps',
+          'Tool invocation',
+          'Observation integration',
+          'One full loop to completion',
+        ]}
+        callout="Tool-augmented reasoning that remains interpretable."
       >
         <ReActDiagram progress={reactProg} />
       </SectionShell>
@@ -619,20 +553,20 @@ export default function Page() {
       <SectionShell
         ref={memRef as any}
         id="memgpt"
-          title="MemGPT: Short-term vs long-term memory paging"
-          subtitle="Actively page memories between a small working set and a larger archive to stay relevant and grounded."
-          bullets={[
-            'STM writes & evictions',
-            'Pager policies',
-            'LTM recall',
-            'Fresh context assembly',
-          ]}
-          callout="Assistants that remember what matters without getting lost."
+        title="MemGPT: Short-term vs long-term memory paging"
+        subtitle="Actively page memories between a small working set and a larger archive to stay relevant and grounded."
+        bullets={[
+          'STM writes & evictions',
+          'Pager policies',
+          'LTM recall',
+          'Fresh context assembly',
+        ]}
+        callout="Assistants that remember what matters without getting lost."
       >
         <MemGPTDiagram progress={memProg} />
       </SectionShell>
 
-      <PatternLibrary />
+      {/* Pattern Library removed */}
 
       <footer className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12 border-t border-white/10 text-sm text-white/60">
         Built for clarity. Accessible, responsive, and motion-aware.

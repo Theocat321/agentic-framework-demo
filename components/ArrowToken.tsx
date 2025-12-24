@@ -9,6 +9,8 @@ type ArrowTokenProps = {
   size?: number; // length of arrow head
   color?: string;
   ariaLabel?: string;
+  startTrim?: number; // trim at start in 0..100 units
+  endTrim?: number;   // trim at end in 0..100 units
 };
 
 function pointOnPolyline(points: Array<[number, number]>, t: number) {
@@ -35,20 +37,43 @@ function pointOnPolyline(points: Array<[number, number]>, t: number) {
   return { x: last[0], y: last[1] };
 }
 
-export function ArrowToken({ path, progress, size = 8, color = 'rgba(255,255,255,0.9)', ariaLabel }: ArrowTokenProps) {
-  const posX = useTransform(progress, t => `${pointOnPolyline(path, t).x}%`);
-  const posY = useTransform(progress, t => `${pointOnPolyline(path, t).y}%`);
+function trimPolyline(points: Array<[number, number]>, startTrim = 0, endTrim = 0) {
+  if (points.length < 2) return points;
+  const out = points.map(p => [...p] as [number, number]);
+  if (startTrim > 0) {
+    const a = out[0];
+    const b = out[1];
+    const dx = b[0] - a[0];
+    const dy = b[1] - a[1];
+    const len = Math.hypot(dx, dy) || 1;
+    out[0] = [a[0] + (dx / len) * startTrim, a[1] + (dy / len) * startTrim];
+  }
+  if (endTrim > 0) {
+    const n = out.length - 1;
+    const a = out[n - 1];
+    const b = out[n];
+    const dx = b[0] - a[0];
+    const dy = b[1] - a[1];
+    const len = Math.hypot(dx, dy) || 1;
+    out[n] = [b[0] - (dx / len) * endTrim, b[1] - (dy / len) * endTrim];
+  }
+  return out;
+}
+
+export function ArrowToken({ path, progress, size = 8, color = 'rgba(255,255,255,0.9)', ariaLabel, startTrim = 6, endTrim = 6 }: ArrowTokenProps) {
+  const trimmed = trimPolyline(path, startTrim, endTrim);
+  const posX = useTransform(progress, t => `${pointOnPolyline(trimmed, t).x}%`);
+  const posY = useTransform(progress, t => `${pointOnPolyline(trimmed, t).y}%`);
   const angle = useTransform(progress, t => {
-    const p1 = pointOnPolyline(path, Math.max(0, Math.min(1, t)));
-    const p2 = pointOnPolyline(path, Math.max(0, Math.min(1, t + 0.001)));
+    const p1 = pointOnPolyline(trimmed, Math.max(0, Math.min(1, t)));
+    const p2 = pointOnPolyline(trimmed, Math.max(0, Math.min(1, t + 0.001)));
     return Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
   });
   return (
-    <motion.svg aria-label={ariaLabel} className="absolute" viewBox={`0 0 ${size} ${size}`} width={size} height={size} style={{ left: posX, top: posY, transform: 'translate(-50%, -50%) rotate(0deg)' }}>
-      <motion.g style={{ rotate: angle }} transform={`translate(${size/2} ${size/2})`}>
-        <polygon points={`${-size/2},${-size/4} ${-size/2},${size/4} ${size/2},0`} fill={color} />
+    <motion.svg aria-label={ariaLabel} className="absolute" viewBox={`0 0 ${size} ${size}`} width={size} height={size} style={{ left: posX, top: posY, transform: 'translate(-50%, -50%) rotate(0deg)', zIndex: 30 }}>
+      <motion.g style={{ rotate: angle }} transform={`translate(${size / 2} ${size / 2})`}>
+        <polygon points={`${-size / 2},${-size / 3} ${-size / 2},${size / 3} ${size / 2},0`} fill={color} />
       </motion.g>
     </motion.svg>
   );
 }
-
